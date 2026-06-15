@@ -1,0 +1,6 @@
+{
+  "name": "손님평점",
+  "description": "식당이 남기는 고객 매너 리뷰",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

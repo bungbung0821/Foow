@@ -1,0 +1,59 @@
+{
+  "entities": {
+    "GuestReview": {
+      "title": "GuestReview",
+      "description": "A review of a guest's visit to a restaurant registered by the host",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID of the review"
+        },
+        "guestName": {
+          "type": "string",
+          "description": "Name or handle of the guest being reviewed"
+        },
+        "restaurantName": {
+          "type": "string",
+          "description": "Name of the restaurant leaving the review"
+        },
+        "restaurantType": {
+          "type": "string",
+          "description": "Type/category of the restaurant leaving the review"
+        },
+        "rating": {
+          "type": "number",
+          "description": "Rating score out of 5"
+        },
+        "visitDate": {
+          "type": "string",
+          "description": "Date of the visit, form of YYYY-MM-DD"
+        },
+        "visitType": {
+          "type": "string",
+          "description": "Type of visit (e.g. Reservation, Walk-in, Group, etc.)"
+        },
+        "tags": {
+          "type": "array",
+          "description": "List of tags describing guest's demeanor and status"
+        },
+        "reviewText": {
+          "type": "string",
+          "description": "Textual context of the review"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of creation on the server"
+        }
+      },
+      "required": ["id", "guestName", "restaurantName", "restaurantType", "rating", "visitDate", "visitType", "tags", "reviewText", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/reviews/{reviewId}": {
+      "schema": "GuestReview",
+      "description": "Collection of visitor reviews shared amongst allied restaurants"
+    }
+  }
+}

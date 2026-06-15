@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions for validation
+    function isValidId(id) {
+       return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidGuestReview(data) {
+      return data.keys().hasAll(['id', 'guestName', 'restaurantName', 'restaurantType', 'rating', 'visitDate', 'visitType', 'tags', 'reviewText', 'createdAt'])
+        && data.keys().size() == 10
+        && data.id is string && data.id.size() <= 128
+        && data.guestName is string && data.guestName.size() >= 1 && data.guestName.size() <= 128
+        && data.restaurantName is string && data.restaurantName.size() >= 1 && data.restaurantName.size() <= 128
+        && data.restaurantType is string && data.restaurantType.size() >= 1 && data.restaurantType.size() <= 64
+        && (data.rating is number || data.rating is int || data.rating is float) && data.rating >= 0.0 && data.rating <= 5.0
+        && data.visitDate is string && data.visitDate.size() <= 24
+        && data.visitType is string && data.visitType.size() <= 64
+        && data.tags is list && data.tags.size() <= 15
+        && data.reviewText is string && data.reviewText.size() <= 4000
+        && data.createdAt is timestamp;
+    }
+
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isValidId(reviewId) 
+        && isValidGuestReview(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+      allow update: if false; // Reviews are immutable archives
+      allow delete: if true; // Allow deletions for reset operations or demo management
+    }
+  }
+}
